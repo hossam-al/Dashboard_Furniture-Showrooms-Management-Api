@@ -36,7 +36,12 @@ return new class extends Migration
 
             $table->decimal('cost', 12, 2)->default(0);
             $table->text('notes')->nullable();
+            // 🔥 مهم جدًا للفلترة والبحث في مراحل المنتج
+            $table->index('product_id');
+            $table->index('status');
 
+            // 🔥 مهم لمعرفة المنتجات غير المكتملة
+            $table->index(['product_id', 'status']);
             $table->timestamps();
         });
     }

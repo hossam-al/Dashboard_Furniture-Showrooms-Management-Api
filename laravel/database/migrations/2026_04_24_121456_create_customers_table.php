@@ -22,7 +22,9 @@ return new class extends Migration
             $table->string('phone');
             $table->text('address')->nullable();
             $table->text('notes')->nullable();
-
+            // 🔥 مهم جدًا للفلترة والبحث في الـ customers
+            $table->index('showroom_id');
+            $table->index('phone');
             $table->timestamps();
         });
     }

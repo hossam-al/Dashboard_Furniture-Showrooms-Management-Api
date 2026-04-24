@@ -26,7 +26,13 @@ return new class extends Migration
             $table->enum('payment_status', ['unpaid', 'paid', 'failed'])->default('unpaid');
 
             $table->decimal('amount', 10, 2);
+            // 🔥 مهم جدًا للفلترة والبحث في الـ subscriptions
+            $table->index('showroom_id');
+            $table->index('status');
+            $table->index('end_date');
 
+            // 🔥 لمعرفة الاشتراكات المنتهية
+            $table->index(['showroom_id', 'status']);
             $table->timestamps();
         });
     }

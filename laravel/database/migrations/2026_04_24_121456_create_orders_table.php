@@ -11,48 +11,58 @@ return new class extends Migration
      */
     public function up(): void
     {
-       // create_orders_table.php
+        // create_orders_table.php
 
-Schema::create('orders', function (Blueprint $table) {
-    $table->id();
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
 
-    $table->foreignId('showroom_id')->constrained()->cascadeOnDelete();
-    $table->foreignId('customer_id')->constrained()->restrictOnDelete();
+            $table->foreignId('showroom_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained()->restrictOnDelete();
 
-    $table->string('order_number')->unique();
+            $table->string('order_number')->unique();
 
-    $table->enum('order_type', ['ready', 'commission']);
+            $table->enum('order_type', ['ready', 'commission']);
 
-    $table->enum('status', [
-        'new',
-        'confirmed',
-        'in_manufacturing',
-        'ready',
-        'delivered',
-        'cancelled'
-    ])->default('new');
+            $table->enum('status', [
+                'new',
+                'confirmed',
+                'in_manufacturing',
+                'ready',
+                'delivered',
+                'cancelled'
+            ])->default('new');
 
-    $table->enum('payment_status', [
-        'unpaid',
-        'partial',
-        'paid',
-        'refunded'
-    ])->default('unpaid');
+            $table->enum('payment_status', [
+                'unpaid',
+                'partial',
+                'paid',
+                'refunded'
+            ])->default('unpaid');
 
-    $table->decimal('subtotal', 12, 2);
-    $table->decimal('discount', 12, 2)->default(0);
-    $table->decimal('total', 12, 2);
+            $table->decimal('subtotal', 12, 2);
+            $table->decimal('discount', 12, 2)->default(0);
+            $table->decimal('total', 12, 2);
 
-    $table->decimal('paid_amount', 12, 2)->default(0);
-    $table->decimal('remaining_amount', 12, 2)->default(0);
+            $table->decimal('paid_amount', 12, 2)->default(0);
+            $table->decimal('remaining_amount', 12, 2)->default(0);
 
-    $table->date('expected_delivery_date')->nullable();
-    $table->dateTime('delivered_at')->nullable();
+            $table->date('expected_delivery_date')->nullable();
+            $table->dateTime('delivered_at')->nullable();
 
-    $table->text('notes')->nullable();
+            $table->text('notes')->nullable();
+            // 🔥 مهم جدًا للفلترة والبحث في الـ orders
+            $table->index('showroom_id');
+            $table->index('customer_id');
+            $table->index('status');
+            $table->index('payment_status');
+            $table->index('created_at');
 
-    $table->timestamps();
-});
+            // 🔥 مهم للـ dashboard
+            $table->index(['showroom_id', 'status']);
+            $table->index(['showroom_id', 'created_at']);
+
+            $table->timestamps();
+        });
     }
 
     /**
